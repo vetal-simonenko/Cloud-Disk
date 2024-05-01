@@ -11,6 +11,7 @@ Create the file `server/.env` with your Atlas URI and the server port:
 ```
 DBURL=mongodb+srv://<username>:<password>@sandbox.jadwj.mongodb.net/
 PORT=5000
+JWT_SECRET_KEY=your-secret-key
 ```
 
 Start server:

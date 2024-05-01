@@ -70,7 +70,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 		const token = jwt.sign(
 			{ id: user.id },
-			`${process.env.SECRET_KEY}`,
+			`${process.env.JWT_SECRET_KEY}`,
 			{
 				expiresIn: '1h',
 			}

@@ -1,29 +1,36 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import { Box, Typography, Container } from '@mui/material';
+import ResponsiveAppBar from './components/header/Header';
+import Footer from './components/footer/Footer';
+import { BrowserRouter } from 'react-router-dom';
 
-function Copyright() {
+const App = () => {
 	return (
-		<Typography variant='body2' color='text.secondary' align='center'>
-			{'Copyright © '}
-			<Link color='inherit' href='https://mui.com/'>
-				Your Website
-			</Link>{' '}
-			{new Date().getFullYear()}.
-		</Typography>
-	);
-}
-
-export default function App() {
-	return (
-		<Container maxWidth='sm'>
-			<Box sx={{ my: 4 }}>
-				<Typography variant='h4' component='h1' sx={{ mb: 2 }}>
-					Material UI Vite.js example in TypeScript
-				</Typography>
-				<Copyright />
+		<BrowserRouter>
+			<Box
+				component='div'
+				id='wrapper'
+				sx={{
+					minHeight: '100vh',
+					display: 'flex',
+					flexDirection: 'column',
+				}}
+			>
+				<ResponsiveAppBar />
+				<Box component='main' sx={{ flexGrow: 1, py: 4 }}>
+					<Container maxWidth='lg'>
+						<Typography
+							variant='h4'
+							component='h1'
+							sx={{ mb: 2 }}
+						>
+							Mern cloud disk
+						</Typography>
+					</Container>
+				</Box>
+				<Footer />
 			</Box>
-		</Container>
+		</BrowserRouter>
 	);
-}
+};
+
+export default App;
