@@ -2,10 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import 'dotenv/config';
+import { corsMiddleware } from './middleware/cors.middleware';
 
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(corsMiddleware);
 app.use(express.json());
 app.use('/api/auth', authRouter);
 

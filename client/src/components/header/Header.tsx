@@ -5,16 +5,29 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Sign In', 'Registration'];
+import AdbIcon from '@mui/icons-material/Adb';
+import MenuIcon from '@mui/icons-material/Menu';
+
+import { NavLink } from 'react-router-dom';
+import styled from '@emotion/styled';
+
+const pages = [
+	{ label: 'Login', url: '/login' },
+	{ label: 'Registration', url: '/registration' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+const ActiveLink = styled(NavLink)({
+	'&.active': {
+		color: '#edff00',
+	},
+});
 
 const ResponsiveAppBar = () => {
 	const [anchorElNav, setAnchorElNav] =
@@ -105,11 +118,11 @@ const ResponsiveAppBar = () => {
 						>
 							{pages.map((page) => (
 								<MenuItem
-									key={page}
+									key={page.label}
 									onClick={handleCloseNavMenu}
 								>
 									<Typography textAlign='center'>
-										{page}
+										{page.label}
 									</Typography>
 								</MenuItem>
 							))}
@@ -142,6 +155,7 @@ const ResponsiveAppBar = () => {
 						<br /> CLOUD
 					</Typography>
 					<Box
+						component='nav'
 						sx={{
 							flexGrow: 1,
 							display: { xs: 'none', md: 'flex' },
@@ -151,7 +165,9 @@ const ResponsiveAppBar = () => {
 					>
 						{pages.map((page) => (
 							<Button
-								key={page}
+								to={page.url}
+								key={page.label}
+								component={ActiveLink}
 								onClick={handleCloseNavMenu}
 								sx={{
 									my: 2,
@@ -159,7 +175,7 @@ const ResponsiveAppBar = () => {
 									display: 'block',
 								}}
 							>
-								{page}
+								{page.label}
 							</Button>
 						))}
 					</Box>
