@@ -18,7 +18,7 @@ Start server:
 ```
 cd server
 npm install
-npm	run dev
+npm run dev
 ```
 
 Start Web server
