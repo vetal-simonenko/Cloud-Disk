@@ -2,6 +2,8 @@ import express, { Router, Request, Response } from 'express';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import { check, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 const authRouter: Router = express.Router();
 
@@ -44,5 +46,40 @@ authRouter.post(
 		}
 	}
 );
+
+authRouter.post('/login', async (req: Request, res: Response) => {
+	try {
+		const { email, password } = req.body;
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			return res.status(404).json({
+				message: `User with email "${email}" not found! Please, register user!`,
+			});
+		}
+
+		const isPassValid = bcrypt.compareSync(
+			password,
+			user.password as string
+		);
+
+		if (!isPassValid) {
+			return res.status(400).json({
+				message: `Password for user "${email}" not correct!`,
+			});
+		}
+
+		const token = jwt.sign(
+			{ id: user.id },
+			`${process.env.SECRET_KEY}`,
+			{
+				expiresIn: '1h',
+			}
+		);
+	} catch (error) {
+		console.log(error);
+		res.send({ message: 'Server error' });
+	}
+});
 
 export default authRouter;
