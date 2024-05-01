@@ -3,7 +3,6 @@ import User from '../models/User';
 import bcrypt from 'bcrypt';
 import { check, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
 
 const authRouter: Router = express.Router();
 
@@ -35,7 +34,7 @@ authRouter.post(
 				});
 			}
 
-			const hashPassword = await bcrypt.hash(password, 15);
+			const hashPassword = await bcrypt.hash(password, 8);
 			const user = new User({ email, password: hashPassword });
 			await user.save();
 
@@ -54,7 +53,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 		if (!user) {
 			return res.status(404).json({
-				message: `User with email "${email}" not found! Please, register user!`,
+				message: `User with email ${email} not found! Please, register user!`,
 			});
 		}
 
@@ -65,7 +64,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 		if (!isPassValid) {
 			return res.status(400).json({
-				message: `Password for user "${email}" not correct!`,
+				message: `Password for user ${email} not correct!`,
 			});
 		}
 
@@ -76,6 +75,17 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 				expiresIn: '1h',
 			}
 		);
+
+		res.json({
+			token,
+			user: {
+				id: user.id,
+				email: user.email,
+				diskSpace: user.diskSpace,
+				usedSpace: user.usedSpace,
+				avatar: user.avatar,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 		res.send({ message: 'Server error' });
