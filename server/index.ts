@@ -1,19 +1,20 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import config from 'config';
+//import config from 'config';
 import authRouter from './routes/auth.routes';
+import 'dotenv/config';
 
 const app = express();
-const PORT = config.get('serverPort');
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use('/api/auth', authRouter);
 
 const start = async () => {
 	try {
-		await mongoose.connect(config.get('dbUrl')).then(
+		await mongoose.connect(`${process.env.DBURL}`).then(
 			() => {
-				console.log('Mongodb ready to use');
+				console.log('MongoDB ready to use');
 			},
 			(err) => {
 				console.log(err);
