@@ -1,30 +1,35 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../reducers/userReducer';
 import { useNavigate } from 'react-router-dom';
 
-export const useRegister = () => {
+export const useLogin = () => {
 	const [message, setMessage] = useState({
 		msg: '',
 		err: false,
 	});
 	const [loader, setLoader] = useState(false);
+
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const registrationFn = async (email: string, password: string) => {
+	const loginFn = async (email: string, password: string) => {
 		setLoader(true);
 		try {
 			const response = await axios.post(
-				'http://localhost:5000/api/auth/registration',
+				'http://localhost:5000/api/auth/login',
 				{
 					email,
 					password,
 				}
 			);
-			setMessage({ msg: response.data.message, err: false });
+			dispatch(setUser(response.data.user));
+			localStorage.setItem('token', response.data.token);
+
+			setMessage({ msg: 'Login successful!', err: false });
 			setLoader(false);
-			setTimeout(() => {
-				navigate('/');
-			}, 1000);
+			navigate('/');
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
 				setMessage({
@@ -44,6 +49,6 @@ export const useRegister = () => {
 	return {
 		loader,
 		message,
-		registrationFn,
+		loginFn,
 	};
 };

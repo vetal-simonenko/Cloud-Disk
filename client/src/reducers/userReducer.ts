@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
 	currentUser: {},
@@ -9,12 +9,18 @@ export const userSlice = createSlice({
 	name: 'User',
 	initialState,
 	reducers: {
-		incrementByAmount: (state) => {
-			state;
+		setUser: (state, action: PayloadAction<object>) => {
+			state.currentUser = action.payload;
+			state.isAuth = true;
+		},
+		logoutUser: (state) => {
+			localStorage.removeItem('token');
+			state.currentUser = {};
+			state.isAuth = false;
 		},
 	},
 });
 
-export const { incrementByAmount } = userSlice.actions;
+export const { setUser, logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;
