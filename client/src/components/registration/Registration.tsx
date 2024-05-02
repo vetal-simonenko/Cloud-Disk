@@ -1,14 +1,22 @@
-import { Alert, Box, Button, TextField, Typography } from '@mui/material';
+import {
+	Alert,
+	Box,
+	Button,
+	CircularProgress,
+	TextField,
+	Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import { useRegister } from '../../hooks/useRegister';
 
 const Registration = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { message, registrationFn } = useRegister();
+	const { message, loader, registrationFn } = useRegister();
 
 	const formMessage = !!message.msg && (
 		<Alert
+			variant='filled'
 			sx={{
 				mb: 2,
 			}}
@@ -32,7 +40,7 @@ const Registration = () => {
 				onChange={(e) => setEmail(e.target.value)}
 				sx={{
 					width: '100%',
-					mb: 4,
+					mb: 2,
 				}}
 			/>
 			<TextField
@@ -57,6 +65,14 @@ const Registration = () => {
 				}}
 			>
 				Submit
+				{loader && (
+					<CircularProgress
+						size={20}
+						sx={{
+							ml: 2,
+						}}
+					/>
+				)}
 			</Button>
 		</Box>
 	);

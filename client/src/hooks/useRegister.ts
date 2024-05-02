@@ -6,8 +6,10 @@ export const useRegister = () => {
 		msg: '',
 		err: false,
 	});
+	const [loader, setLoader] = useState(false);
 
 	const registrationFn = async (email: string, password: string) => {
+		setLoader(true);
 		try {
 			const response = await axios.post(
 				'http://localhost:5000/api/auth/registration',
@@ -17,6 +19,7 @@ export const useRegister = () => {
 				}
 			);
 			setMessage({ msg: response.data.message, err: false });
+			setLoader(false);
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
 				setMessage({
@@ -29,10 +32,12 @@ export const useRegister = () => {
 					err: true,
 				});
 			}
+			setLoader(false);
 		}
 	};
 
 	return {
+		loader,
 		message,
 		registrationFn,
 	};
