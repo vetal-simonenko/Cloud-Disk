@@ -39,7 +39,7 @@ authRouter.post(
 			const user = new User({ email, password: hashPassword });
 			await user.save();
 
-			await fileService.createDir(new File({ user: user.id }));
+			await fileService.createDir(new File({ userId: user.id }));
 			return res.json({ message: 'User was created!' });
 		} catch (error) {
 			console.log(error);

@@ -12,9 +12,9 @@ const File = new Schema({
 	accessLink: { type: String },
 	size: { type: Number, default: 0 },
 	path: { type: String, default: '' },
-	user: { type: Types.ObjectId, ref: 'User' },
-	parent: { type: Types.ObjectId, ref: 'File' },
-	childs: [{ type: Types.ObjectId, ref: 'File' }],
+	userId: { type: Types.ObjectId, ref: 'User' },
+	parentId: { type: Types.ObjectId, ref: 'File' },
+	childIds: [{ type: Types.ObjectId, ref: 'File' }],
 });
 
 export default model('File', File);

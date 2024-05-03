@@ -2,9 +2,7 @@ import fs from 'fs';
 
 class FileService {
 	createDir(file: any) {
-		console.log(file);
-
-		const filePath = `${process.env.FILE_PATH}\\${file.user}\\${file.path}`;
+		const filePath = `${process.env.FILE_PATH}\\${file.userId}\\${file.path}`;
 
 		return new Promise((resolve, reject) => {
 			try {

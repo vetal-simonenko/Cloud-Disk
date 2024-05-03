@@ -5,9 +5,14 @@ import { Request, Response } from 'express';
 class FileController {
 	async createDir(req: Request, res: Response) {
 		try {
-			const { name, type, parent } = req.body;
-			const file = new File({ name, type, parent, user: req.user.id });
-			const parentFile = await File.findOne({ _id: parent });
+			const { name, type, parentId } = req.body;
+			const file = new File({
+				name,
+				type,
+				parentId,
+				userId: req.user.id,
+			});
+			const parentFile = await File.findOne({ _id: parentId });
 
 			if (!parentFile) {
 				file.path = name;
@@ -16,7 +21,7 @@ class FileController {
 				file.path = `${parentFile.path}\\${file.name}`;
 				await fileService.createDir(file);
 
-				parentFile.childs.push(file._id);
+				parentFile.childIds.push(file._id);
 				await parentFile.save();
 			}
 
@@ -31,8 +36,8 @@ class FileController {
 	async getFiles(req: Request, res: Response) {
 		try {
 			const files = await File.find({
-				user: req.user.id,
-				parent: req.query.parent,
+				userId: req.user.id,
+				parentId: req.query.parent,
 			});
 
 			return res.json({ files });
