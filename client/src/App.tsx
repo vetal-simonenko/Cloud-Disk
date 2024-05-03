@@ -1,21 +1,38 @@
-import { Box, Container } from '@mui/material';
+import { Box, Container, CircularProgress } from '@mui/material';
 import ResponsiveAppBar from './components/header/Header';
 import Footer from './components/footer/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Registration from './components/registration/Registration';
 import Login from './components/login/Login';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './reducers/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { auth } from './actions/user';
+import { useAppDispatch, useAppSelector } from './reducers/hooks';
 
 const App = () => {
-	const isAuth = useSelector((state: RootState) => state.user.isAuth);
-	const dispatch = useDispatch();
+	const [loader, setLoader] = useState(true);
+	const isAuth = useAppSelector((state) => state.user.isAuth);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(auth());
+		dispatch(auth()).finally(() => {
+			setLoader(false);
+		});
 	}, [dispatch]);
+
+	if (loader) {
+		return (
+			<Box
+				sx={{
+					minHeight: '100vh',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return (
 		<BrowserRouter>
@@ -31,21 +48,23 @@ const App = () => {
 				<ResponsiveAppBar />
 				<Box component='main' sx={{ flexGrow: 1, py: 4 }}>
 					<Container maxWidth='lg'>
-						{!isAuth ? (
-							<Routes>
-								<Route
-									path='/registration'
-									element={<Registration />}
-								/>
-								<Route path='/login' element={<Login />} />
-								{/* <Route path='*' element={<Login />} /> */}
-							</Routes>
-						) : (
-							<Routes>
-								<Route path='/' element={<p>List</p>} />
-								{/* <Route path='*' element={<p>List</p>} /> */}
-							</Routes>
-						)}
+						<Routes>
+							{!isAuth ? (
+								<>
+									<Route
+										path='/registration'
+										element={<Registration />}
+									/>
+									<Route path='/login' element={<Login />} />
+									<Route path='*' element={<Login />} />
+								</>
+							) : (
+								<>
+									<Route path='/' element={<p>List</p>} />
+									<Route path='*' element={<p>List</p>} />
+								</>
+							)}
+						</Routes>
 					</Container>
 				</Box>
 				<Footer />

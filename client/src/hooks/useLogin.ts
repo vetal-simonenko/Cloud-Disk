@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../reducers/hooks';
 
 export const useLogin = () => {
 	const [message, setMessage] = useState({
@@ -11,7 +11,7 @@ export const useLogin = () => {
 	});
 	const [loader, setLoader] = useState(false);
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
 	const loginFn = async (email: string, password: string) => {

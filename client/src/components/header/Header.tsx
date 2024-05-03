@@ -16,9 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../reducers/store';
 import { logoutUser } from '../../reducers/userReducer';
+import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
 
 const pages = [
 	{ label: 'Login', url: '/login' },
@@ -54,12 +53,12 @@ const ResponsiveAppBar = () => {
 		setAnchorElUser(null);
 	};
 
-	const isAuth = useSelector((state: RootState) => state.user.isAuth);
-	const dispatch = useDispatch();
+	const isAuth = useAppSelector((state) => state.user.isAuth);
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
-	// delete later
-	const state = useSelector((state: RootState) => state.user);
+	// TODO: need to delete later
+	const state = useAppSelector((state) => state.user);
 	console.log(state);
 
 	return (

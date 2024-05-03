@@ -1,10 +1,9 @@
 import { setUser } from '../reducers/userReducer';
 import axios from 'axios';
+import { Dispatch } from 'redux';
 
 export const auth = () => {
-	return async (
-		dispatch: (arg0: { payload: object; type: 'User/setUser' }) => void
-	) => {
+	return async (dispatch: Dispatch) => {
 		try {
 			const token = localStorage.getItem('token');
 			if (!token) {
@@ -22,7 +21,6 @@ export const auth = () => {
 			dispatch(setUser(response.data.user));
 			localStorage.setItem('token', response.data.token);
 		} catch (error) {
-			console.log(error);
 			localStorage.removeItem('token');
 		}
 	};
