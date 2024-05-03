@@ -1,11 +1,13 @@
-import express, { Router, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import { check, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/auth.middleware';
+import fileService from '../services/fileService';
+import File from '../models/File';
 
-const authRouter: Router = express.Router();
+const authRouter = express.Router();
 
 authRouter.post(
 	'/registration',
@@ -37,6 +39,7 @@ authRouter.post(
 			const user = new User({ email, password: hashPassword });
 			await user.save();
 
+			await fileService.createDir(new File({ user: user.id }));
 			return res.json({ message: 'User was created!' });
 		} catch (error) {
 			console.log(error);

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import 'dotenv/config';
 import { corsMiddleware } from './middleware/cors.middleware';
+import fileRouter from './routes/file.routes';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -10,6 +11,7 @@ const PORT = process.env.PORT;
 app.use(corsMiddleware);
 app.use(express.json());
 app.use('/api/auth', authRouter);
+app.use('/api/files', fileRouter);
 
 const start = async () => {
 	try {
