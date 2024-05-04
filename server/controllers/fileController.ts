@@ -2,6 +2,15 @@ import fileService from '../services/fileService';
 import File from '../models/File';
 import { Request, Response } from 'express';
 
+// Extend express Request interface to include user property
+declare global {
+	namespace Express {
+		interface Request {
+			user?: any;
+		}
+	}
+}
+
 class FileController {
 	async createDir(req: Request, res: Response) {
 		try {
@@ -40,7 +49,7 @@ class FileController {
 				parentId: req.query.parent,
 			});
 
-			return res.json({ files });
+			return res.json(files);
 		} catch (error) {
 			console.log(error);
 			return res.status(500).json({ message: 'Can not get files' });

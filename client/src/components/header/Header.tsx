@@ -58,8 +58,10 @@ const ResponsiveAppBar = () => {
 	const navigate = useNavigate();
 
 	// TODO: need to delete later
-	const state = useAppSelector((state) => state.user);
-	console.log(state);
+	const user = useAppSelector((state) => state.user);
+	const files = useAppSelector((state) => state.files);
+	console.log(user);
+	console.log(files);
 
 	return (
 		<AppBar position='static'>

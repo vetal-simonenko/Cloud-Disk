@@ -2,19 +2,23 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
-	value: 0,
+	files: [],
+	currentDir: '',
 };
 
 export const fileSlice = createSlice({
 	name: 'File',
 	initialState,
 	reducers: {
-		incrementByAmount: (state, action: PayloadAction<number>) => {
-			state.value += action.payload;
+		setFiles: (state, action: PayloadAction<[]>) => {
+			state.files = action.payload;
+		},
+		setCurrentDir: (state, action: PayloadAction<string>) => {
+			state.currentDir = action.payload;
 		},
 	},
 });
 
-export const { incrementByAmount } = fileSlice.actions;
+export const { setFiles, setCurrentDir } = fileSlice.actions;
 
 export default fileSlice.reducer;

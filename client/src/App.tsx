@@ -7,6 +7,7 @@ import Login from './components/login/Login';
 import { useEffect, useState } from 'react';
 import { auth } from './actions/user';
 import { useAppDispatch, useAppSelector } from './reducers/hooks';
+import Disk from './components/disk/Disk';
 
 const App = () => {
 	const [loader, setLoader] = useState(true);
@@ -60,8 +61,8 @@ const App = () => {
 								</>
 							) : (
 								<>
-									<Route path='/' element={<p>List</p>} />
-									<Route path='*' element={<p>List</p>} />
+									<Route index path='/' element={<Disk />} />
+									<Route path='*' element={<Disk />} />
 								</>
 							)}
 						</Routes>
