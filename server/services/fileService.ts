@@ -10,7 +10,9 @@ class FileService {
 					fs.mkdirSync(filePath);
 					return resolve({ message: 'Folder was created' });
 				} else {
-					return reject({ message: 'Folder alredy exist' });
+					return reject({
+						message: 'Folder with current name alredy exist',
+					});
 				}
 			} catch (error) {
 				return reject({ message: "Folder wasn't created" });

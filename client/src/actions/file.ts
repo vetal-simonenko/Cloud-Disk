@@ -1,8 +1,8 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { setFiles } from '../reducers/fileReducer';
+import { addFile, setFiles } from '../reducers/fileReducer';
 
-const getFiles = (dirId: string) => {
+export const getFiles = (dirId: string) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			const response = await axios.get(
@@ -19,11 +19,42 @@ const getFiles = (dirId: string) => {
 			);
 
 			dispatch(setFiles(response.data));
-			console.log(response.data);
-		} catch (error) {
-			console.log(error);
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.log(error.response?.data.message);
+			} else {
+				console.log('An error occurred:' + (error as Error).message);
+			}
 		}
 	};
 };
 
-export default getFiles;
+export const createDir = (dirId: string, name: string) => {
+	return async (dispatch: Dispatch) => {
+		try {
+			const response = await axios.post(
+				`http://localhost:5000/api/files`,
+				{
+					name,
+					parentId: dirId ? dirId : null,
+					type: 'dir',
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							'token'
+						)}`,
+					},
+				}
+			);
+
+			dispatch(addFile(response.data));
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.log(error.response?.data.message);
+			} else {
+				console.log('An error occurred:' + (error as Error).message);
+			}
+		}
+	};
+};
