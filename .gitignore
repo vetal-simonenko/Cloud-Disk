@@ -17,6 +17,7 @@ config.env
 .env
 
 # Editor directories and files
+files/
 .vscode/*
 !.vscode/extensions.json
 .idea

@@ -1,6 +1,8 @@
 import fileService from '../services/fileService';
 import File from '../models/File';
 import { Request, Response } from 'express';
+import User from '../models/User';
+import fs from 'fs';
 
 // Extend express Request interface to include user property
 declare global {
@@ -53,6 +55,58 @@ class FileController {
 		} catch (error) {
 			console.log(error);
 			return res.status(500).json({ message: 'Can not get files' });
+		}
+	}
+
+	async uploadFile(req: Request, res: Response) {
+		try {
+			const file: any = req.files?.file;
+
+			const parent = await File.findOne({
+				userId: req.user.id,
+				_id: req.body.parent,
+			});
+
+			const user: any = await User.findOne({ _id: req.user.id });
+
+			if (user.usedSpace + file.size > user.diskSpace) {
+				return res
+					.status(400)
+					.json({ message: 'There is no space on disk' });
+			}
+
+			user.usedSpace = user.usedSpace + file.size;
+
+			let filePath: string;
+			if (parent) {
+				filePath = `${process.env.FILE_PATH}\\${user._id}\\${parent.path}\\${file.name}`;
+			} else {
+				filePath = `${process.env.FILE_PATH}\\${user._id}\\${file.name}`;
+			}
+
+			if (fs.existsSync(filePath)) {
+				return res.status(400).json({ message: 'File already exist' });
+			}
+			await file.mv(filePath);
+
+			const type = file.name.split('.').pop();
+
+			const dbFile = new File({
+				name: file.name,
+				type,
+				size: file.size,
+				path: parent?.path,
+				parentId: parent?._id,
+				userId: user._id,
+			});
+
+			await dbFile.save();
+			await user.save();
+
+			res.json(dbFile);
+		} catch (error) {
+			console.log(error);
+			return res.status(500).json({ message: 'File can not be upload' });
 		}
 	}
 }

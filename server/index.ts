@@ -4,10 +4,12 @@ import authRouter from './routes/auth.routes';
 import 'dotenv/config';
 import { corsMiddleware } from './middleware/cors.middleware';
 import fileRouter from './routes/file.routes';
+import fileUpload from 'express-fileupload';
 
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(fileUpload({}));
 app.use(corsMiddleware);
 app.use(express.json());
 app.use('/api/auth', authRouter);
