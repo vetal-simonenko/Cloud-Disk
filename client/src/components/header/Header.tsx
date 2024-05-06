@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { logoutUser } from '../../reducers/userReducer';
 import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
@@ -76,8 +76,8 @@ const ResponsiveAppBar = () => {
 					<Typography
 						variant='h6'
 						noWrap
-						component='a'
-						href='#app-bar-with-responsive-menu'
+						component={Link}
+						to='/'
 						sx={{
 							mr: 2,
 							display: { xs: 'none', md: 'flex' },
@@ -146,8 +146,8 @@ const ResponsiveAppBar = () => {
 					<Typography
 						variant='h6'
 						noWrap
-						component='a'
-						href='#app-bar-with-responsive-menu'
+						component={Link}
+						to='/'
 						sx={{
 							mr: 2,
 							display: { xs: 'flex', md: 'none' },

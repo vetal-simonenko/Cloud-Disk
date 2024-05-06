@@ -1,9 +1,15 @@
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
 import { useAppDispatch, useAppSelector } from '../../../../reducers/hooks';
 import { pushToStack, setCurrentDir } from '../../../../reducers/fileReducer';
+import { Link } from 'react-router-dom';
+
+const FileLink = styled(Link)({
+	color: 'white',
+	textDecoration: 'none',
+});
 
 const File = ({ file }: { file: TFile }) => {
 	const dispatch = useAppDispatch();
@@ -20,6 +26,8 @@ const File = ({ file }: { file: TFile }) => {
 				file.type === 'dir' ? openDirHandler() : '';
 			}}
 			container
+			component={FileLink}
+			to={`/${file._id}`}
 			sx={{
 				p: 2,
 				borderTop: '1px solid white',
