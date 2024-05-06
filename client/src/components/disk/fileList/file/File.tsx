@@ -2,10 +2,23 @@ import { Grid } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
+import { useAppDispatch, useAppSelector } from '../../../../reducers/hooks';
+import { pushToStack, setCurrentDir } from '../../../../reducers/fileReducer';
 
 const File = ({ file }: { file: TFile }) => {
+	const dispatch = useAppDispatch();
+	const currentDir = useAppSelector((state) => state.files.currentDir);
+
+	const openDirHandler = () => {
+		dispatch(pushToStack(currentDir));
+		dispatch(setCurrentDir(file._id));
+	};
+
 	return (
 		<Grid
+			onClick={() => {
+				file.type === 'dir' ? openDirHandler() : '';
+			}}
 			container
 			sx={{
 				mb: 2,

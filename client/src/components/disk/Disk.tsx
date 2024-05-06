@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
 import { useEffect, useRef, useState } from 'react';
 import { createDir, getFiles } from '../../actions/file';
 import FileList from './fileList/FileList';
+import { popFromStack } from '../../reducers/fileReducer';
 
 const Disk = () => {
 	const [open, setOpen] = useState(false);
@@ -20,6 +21,7 @@ const Disk = () => {
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
+	//const dirStack = useAppSelector((state) => state.files.dirStack);
 
 	useEffect(() => {
 		dispatch(getFiles(currentDir));
@@ -43,6 +45,10 @@ const Disk = () => {
 		});
 		dispatch(createDir(currentDir, formJson.name));
 		handleTogglePopup();
+	};
+
+	const backClickHandler = () => {
+		dispatch(popFromStack());
 	};
 
 	return (
@@ -86,14 +92,18 @@ const Disk = () => {
 				</Typography>
 				<Grid container sx={{ mb: 3 }}>
 					<Grid item xs={6} sx={{ display: 'flex' }}>
-						<Button
-							sx={{ mr: 2 }}
-							color='primary'
-							size='large'
-							variant='outlined'
-						>
-							Back
-						</Button>
+						{currentDir && (
+							<Button
+								onClick={backClickHandler}
+								sx={{ mr: 2 }}
+								color='primary'
+								size='large'
+								variant='outlined'
+							>
+								Back
+							</Button>
+						)}
+
 						<Button
 							onClick={handleTogglePopup}
 							color='primary'
