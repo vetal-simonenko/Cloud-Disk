@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import type { TFile } from '../libs/definitions';
 
 type FileState = {
-	files: object[];
+	files: TFile[];
 	currentDir: string;
 };
 
@@ -21,7 +22,7 @@ export const fileSlice = createSlice({
 		setCurrentDir: (state, action: PayloadAction<string>) => {
 			state.currentDir = action.payload;
 		},
-		addFile: (state, action: PayloadAction<object>) => {
+		addFile: (state, action: PayloadAction<TFile>) => {
 			state.files.push(action.payload);
 		},
 	},

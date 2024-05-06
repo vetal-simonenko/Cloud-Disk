@@ -28,6 +28,17 @@ const Disk = () => {
 		setOpen((open) => !open);
 	};
 
+	const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		const formJson: { [key: string]: string } = {};
+		formData.forEach((value, key) => {
+			formJson[key] = value.toString();
+		});
+		dispatch(createDir(currentDir, formJson.name));
+		handleTogglePopup();
+	};
+
 	return (
 		<>
 			<Dialog
@@ -35,16 +46,7 @@ const Disk = () => {
 				onClose={handleTogglePopup}
 				PaperProps={{
 					component: 'form',
-					onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-						event.preventDefault();
-						const formData = new FormData(event.currentTarget);
-						const formJson: { [key: string]: string } = {};
-						formData.forEach((value, key) => {
-							formJson[key] = value.toString();
-						});
-						dispatch(createDir(currentDir, formJson.name));
-						handleTogglePopup();
-					},
+					onSubmit: handleFormSubmit,
 				}}
 			>
 				<DialogTitle>Create new folder</DialogTitle>
@@ -66,6 +68,7 @@ const Disk = () => {
 					<Button type='submit'>Create</Button>
 				</DialogActions>
 			</Dialog>
+
 			<Box maxWidth='md' marginInline='auto'>
 				<Typography
 					variant='h5'
