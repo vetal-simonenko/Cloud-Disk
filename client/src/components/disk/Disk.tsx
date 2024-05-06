@@ -10,12 +10,13 @@ import {
 	Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createDir, getFiles } from '../../actions/file';
 import FileList from './fileList/FileList';
 
 const Disk = () => {
 	const [open, setOpen] = useState(false);
+	const textRef = useRef<HTMLInputElement | null>(null);
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
@@ -26,6 +27,11 @@ const Disk = () => {
 
 	const handleTogglePopup = () => {
 		setOpen((open) => !open);
+		setTimeout(() => {
+			if (!open) {
+				textRef.current?.focus();
+			}
+		}, 0);
 	};
 
 	const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,6 +58,7 @@ const Disk = () => {
 				<DialogTitle>Create new folder</DialogTitle>
 				<DialogContent>
 					<TextField
+						inputRef={textRef}
 						autoFocus
 						required
 						margin='dense'
