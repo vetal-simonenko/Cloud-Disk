@@ -8,7 +8,7 @@ const FileList = () => {
 
 	return (
 		<>
-			<Grid container sx={{ mb: 2 }}>
+			<Grid container sx={{ p: 2 }}>
 				<Grid item xs={8}>
 					Name
 				</Grid>

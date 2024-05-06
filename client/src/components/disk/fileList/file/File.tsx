@@ -21,11 +21,14 @@ const File = ({ file }: { file: TFile }) => {
 			}}
 			container
 			sx={{
-				mb: 2,
+				p: 2,
 				borderTop: '1px solid white',
-				pt: 2,
 				display: 'flex',
 				alignItems: 'center',
+				'&:hover': {
+					cursor: 'pointer',
+					backgroundColor: 'rgba(255, 255, 255, 0.05)',
+				},
 			}}
 		>
 			<Grid item xs={8} sx={{ display: 'flex', alignItems: 'center' }}>
