@@ -9,6 +9,7 @@ declare global {
 	namespace Express {
 		interface Request {
 			user?: any;
+			files?: any;
 		}
 	}
 }
@@ -60,34 +61,38 @@ class FileController {
 
 	async uploadFile(req: Request, res: Response) {
 		try {
-			const file: any = req.files?.file;
+			const file = req.files.file;
 
 			const parent = await File.findOne({
 				userId: req.user.id,
 				_id: req.body.parent,
 			});
 
-			const user: any = await User.findOne({ _id: req.user.id });
+			const user = await User.findOne({ _id: req.user.id });
 
-			if (user.usedSpace + file.size > user.diskSpace) {
+			if (user?.usedSpace + file.size > (user?.diskSpace as number)) {
 				return res
 					.status(400)
 					.json({ message: 'There is no space on disk' });
 			}
 
-			user.usedSpace = user.usedSpace + file.size;
+			user!.usedSpace = user?.usedSpace + file.size;
 
 			let filePath: string;
 			if (parent) {
-				filePath = `${process.env.FILE_PATH}\\${user._id}\\${parent.path}\\${file.name}`;
+				filePath = `${process.env.FILE_PATH}\\${user!._id}\\${
+					parent.path
+				}\\${file.name}`;
 			} else {
-				filePath = `${process.env.FILE_PATH}\\${user._id}\\${file.name}`;
+				filePath = `${process.env.FILE_PATH}\\${user!._id}\\${
+					file.name
+				}`;
 			}
 
 			if (fs.existsSync(filePath)) {
 				return res.status(400).json({ message: 'File already exist' });
 			}
-			await file.mv(filePath);
+			file.mv(filePath);
 
 			const type = file.name.split('.').pop();
 
@@ -97,11 +102,11 @@ class FileController {
 				size: file.size,
 				path: parent?.path,
 				parentId: parent?._id,
-				userId: user._id,
+				userId: user?._id,
 			});
 
 			await dbFile.save();
-			await user.save();
+			await user?.save();
 
 			res.json(dbFile);
 		} catch (error) {
