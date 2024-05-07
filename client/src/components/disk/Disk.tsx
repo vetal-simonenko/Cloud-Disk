@@ -8,12 +8,26 @@ import {
 	Grid,
 	TextField,
 	Typography,
+	styled,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
 import { useEffect, useRef, useState } from 'react';
-import { createDir, getFiles } from '../../actions/file';
+import { createDir, getFiles, uploadFile } from '../../actions/file';
 import FileList from './fileList/FileList';
 import { popFromStack } from '../../reducers/fileReducer';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+const VisuallyHiddenInput = styled('input')({
+	clip: 'rect(0 0 0 0)',
+	clipPath: 'inset(50%)',
+	height: 1,
+	overflow: 'hidden',
+	position: 'absolute',
+	bottom: 0,
+	left: 0,
+	whiteSpace: 'nowrap',
+	width: 1,
+});
 
 const Disk = () => {
 	const [open, setOpen] = useState(false);
@@ -21,7 +35,6 @@ const Disk = () => {
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
-	//const dirStack = useAppSelector((state) => state.files.dirStack);
 
 	useEffect(() => {
 		dispatch(getFiles(currentDir));
@@ -49,6 +62,15 @@ const Disk = () => {
 
 	const backClickHandler = () => {
 		dispatch(popFromStack());
+	};
+
+	const fileUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (files) {
+			[...files].forEach((file) =>
+				dispatch(uploadFile(file, currentDir))
+			);
+		}
 	};
 
 	return (
@@ -106,11 +128,27 @@ const Disk = () => {
 
 						<Button
 							onClick={handleTogglePopup}
+							sx={{ mr: 2 }}
 							color='primary'
 							size='large'
 							variant='outlined'
 						>
 							Create Folder
+						</Button>
+
+						<Button
+							component='label'
+							role={undefined}
+							variant='outlined'
+							tabIndex={-1}
+							startIcon={<CloudUploadIcon />}
+						>
+							Upload
+							<VisuallyHiddenInput
+								onChange={(e) => fileUploadHandler(e)}
+								multiple={true}
+								type='file'
+							/>
 						</Button>
 					</Grid>
 					<Grid

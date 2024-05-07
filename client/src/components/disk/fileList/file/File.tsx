@@ -16,15 +16,15 @@ const File = ({ file }: { file: TFile }) => {
 	const currentDir = useAppSelector((state) => state.files.currentDir);
 
 	const openDirHandler = () => {
-		dispatch(pushToStack(currentDir));
-		dispatch(setCurrentDir(file._id));
+		if (file.type === 'dir') {
+			dispatch(pushToStack(currentDir));
+			dispatch(setCurrentDir(file._id));
+		}
 	};
 
 	return (
 		<Grid
-			onClick={() => {
-				file.type === 'dir' ? openDirHandler() : '';
-			}}
+			onClick={openDirHandler}
 			container
 			component={FileLink}
 			to={`/${file._id}`}
@@ -59,7 +59,7 @@ const File = ({ file }: { file: TFile }) => {
 				xs={2}
 				sx={{ display: 'flex', justifyContent: 'flex-end' }}
 			>
-				{file.size}
+				{`${(file.size / 1000000).toFixed(3)} Mb`}
 			</Grid>
 		</Grid>
 	);
