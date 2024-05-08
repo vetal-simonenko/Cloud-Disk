@@ -4,10 +4,10 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
 import { useAppDispatch, useAppSelector } from '../../../../reducers/hooks';
 import { pushToStack, setCurrentDir } from '../../../../reducers/fileReducer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { downloadFile } from '../../../../actions/file';
+import { deleteFile, downloadFile } from '../../../../actions/file';
 
 const FileLink = styled(Link)({
 	color: 'white',
@@ -30,7 +30,10 @@ const File = ({ file }: { file: TFile }) => {
 		downloadFile(file);
 	};
 
-	const deleteHandler = () => {};
+	const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		dispatch(deleteFile(file));
+	};
 
 	return (
 		<Grid
@@ -87,7 +90,7 @@ const File = ({ file }: { file: TFile }) => {
 					</Button>
 				)}
 				<Button
-					onClick={deleteHandler}
+					onClick={(e) => deleteHandler(e)}
 					sx={{
 						minWidth: '0',
 						mr: 1,

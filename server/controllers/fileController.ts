@@ -78,29 +78,32 @@ class FileController {
 
 			user!.usedSpace = user?.usedSpace + file.size;
 
-			let filePath: string;
+			let path: string;
 			if (parent) {
-				filePath = `${process.env.FILE_PATH}\\${user!._id}\\${
+				path = `${process.env.FILE_PATH}\\${user!._id}\\${
 					parent.path
 				}\\${file.name}`;
 			} else {
-				filePath = `${process.env.FILE_PATH}\\${user!._id}\\${
-					file.name
-				}`;
+				path = `${process.env.FILE_PATH}\\${user!._id}\\${file.name}`;
 			}
 
-			if (fs.existsSync(filePath)) {
+			if (fs.existsSync(path)) {
 				return res.status(400).json({ message: 'File already exist' });
 			}
-			file.mv(filePath);
+			file.mv(path);
 
 			const type = file.name.split('.').pop();
+			let filePath = file.name;
+
+			if (parent) {
+				filePath = `${parent.path}\\ ${file.name}`;
+			}
 
 			const dbFile = new File({
 				name: file.name,
 				type,
 				size: file.size,
-				path: parent?.path,
+				path: filePath,
 				parentId: parent?._id,
 				userId: user?._id,
 			});
@@ -122,7 +125,7 @@ class FileController {
 				userId: req.user.id,
 			});
 
-			const path = `${process.env.FILE_PATH}\\${req.user.id}\\${file?.path}\\${file?.name}`;
+			const path = fileService.getPath(file);
 
 			if (fs.existsSync(path)) {
 				return res.download(path, file?.name as string);
@@ -134,6 +137,27 @@ class FileController {
 			return res
 				.status(500)
 				.json({ message: 'File can not be download' });
+		}
+	}
+
+	async deleteFile(req: Request, res: Response) {
+		try {
+			const file = await File.findOne({
+				_id: req.query.id,
+				userId: req.user.id,
+			});
+
+			if (!file) {
+				return res.status(400).json({ message: 'File not found' });
+			}
+
+			fileService.deleteFile(file);
+
+			await file.deleteOne();
+			return res.json({ message: 'File was deleted' });
+		} catch (error) {
+			console.log(error);
+			return res.status(400).json({ message: 'File can not be deleted' });
 		}
 	}
 }

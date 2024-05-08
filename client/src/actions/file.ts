@@ -1,6 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { addFile, setFiles } from '../reducers/fileReducer';
+import { addFile, deleteFileAction, setFiles } from '../reducers/fileReducer';
 import { TFile } from '../libs/definitions';
 
 export const getFiles = (dirId: string) => {
@@ -140,4 +140,29 @@ export const downloadFile = async (file: TFile) => {
 			console.log('An error occurred:' + (error as Error).message);
 		}
 	}
+};
+
+export const deleteFile = (file: TFile) => {
+	return async (dispatch: Dispatch) => {
+		try {
+			const response = await axios.delete(
+				`http://localhost:5000/api/files?id=${file._id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							'token'
+						)}`,
+					},
+				}
+			);
+			dispatch(deleteFileAction(file._id));
+			console.log(response.data.message);
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.log(error.response?.data.message);
+			} else {
+				console.log('An error occurred:' + (error as Error).message);
+			}
+		}
+	};
 };

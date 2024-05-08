@@ -33,10 +33,21 @@ export const fileSlice = createSlice({
 		popFromStack: (state) => {
 			state.currentDir = state.dirStack.pop() as string;
 		},
+		deleteFileAction: (state, action: PayloadAction<string>) => {
+			state.files = state.files.filter(
+				(file) => file._id !== action.payload
+			);
+		},
 	},
 });
 
-export const { setFiles, setCurrentDir, addFile, pushToStack, popFromStack } =
-	fileSlice.actions;
+export const {
+	setFiles,
+	setCurrentDir,
+	addFile,
+	pushToStack,
+	popFromStack,
+	deleteFileAction,
+} = fileSlice.actions;
 
 export default fileSlice.reducer;
