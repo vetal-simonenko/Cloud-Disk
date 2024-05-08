@@ -9,7 +9,7 @@ const FileList = () => {
 	return (
 		<>
 			<Grid container sx={{ p: 2 }}>
-				<Grid item xs={8}>
+				<Grid item xs={7}>
 					Name
 				</Grid>
 				<Grid
@@ -21,7 +21,7 @@ const FileList = () => {
 				</Grid>
 				<Grid
 					item
-					xs={2}
+					xs={3}
 					sx={{ display: 'flex', justifyContent: 'flex-end' }}
 				>
 					Size

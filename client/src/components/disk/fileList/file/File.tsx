@@ -1,10 +1,13 @@
-import { Grid, styled } from '@mui/material';
+import { Button, Grid, styled } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
 import { useAppDispatch, useAppSelector } from '../../../../reducers/hooks';
 import { pushToStack, setCurrentDir } from '../../../../reducers/fileReducer';
 import { Link } from 'react-router-dom';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { downloadFile } from '../../../../actions/file';
 
 const FileLink = styled(Link)({
 	color: 'white',
@@ -22,30 +25,39 @@ const File = ({ file }: { file: TFile }) => {
 		}
 	};
 
+	const downloadHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		downloadFile(file);
+	};
+
+	const deleteHandler = () => {};
+
 	return (
 		<Grid
-			onClick={openDirHandler}
 			container
-			component={FileLink}
-			to={`/${file._id}`}
 			sx={{
 				p: 2,
 				borderTop: '1px solid white',
 				display: 'flex',
 				alignItems: 'center',
 				'&:hover': {
-					cursor: 'pointer',
 					backgroundColor: 'rgba(255, 255, 255, 0.05)',
 				},
 			}}
 		>
-			<Grid item xs={8} sx={{ display: 'flex', alignItems: 'center' }}>
-				{file.type === 'dir' ? (
-					<FolderIcon sx={{ mr: 2 }} />
-				) : (
-					<InsertDriveFileIcon sx={{ mr: 2 }} />
-				)}{' '}
-				{file.name}
+			<Grid item xs={7}>
+				<FileLink
+					onClick={openDirHandler}
+					to={`/${file._id}`}
+					sx={{ display: 'inline-flex', alignItems: 'center' }}
+				>
+					{file.type === 'dir' ? (
+						<FolderIcon sx={{ mr: 2 }} />
+					) : (
+						<InsertDriveFileIcon sx={{ mr: 2 }} />
+					)}{' '}
+					{file.name}
+				</FileLink>
 			</Grid>
 			<Grid
 				item
@@ -56,9 +68,33 @@ const File = ({ file }: { file: TFile }) => {
 			</Grid>
 			<Grid
 				item
-				xs={2}
-				sx={{ display: 'flex', justifyContent: 'flex-end' }}
+				xs={3}
+				sx={{
+					display: 'flex',
+					justifyContent: 'flex-end',
+					alignItems: 'center',
+				}}
 			>
+				{file.type !== 'dir' && (
+					<Button
+						onClick={(e) => downloadHandler(e)}
+						sx={{
+							minWidth: '0',
+							mr: 1,
+						}}
+					>
+						<CloudDownloadIcon />
+					</Button>
+				)}
+				<Button
+					onClick={deleteHandler}
+					sx={{
+						minWidth: '0',
+						mr: 1,
+					}}
+				>
+					<DeleteIcon />
+				</Button>
 				{`${(file.size / 1000000).toFixed(3)} Mb`}
 			</Grid>
 		</Grid>

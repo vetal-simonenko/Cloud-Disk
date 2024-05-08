@@ -114,6 +114,28 @@ class FileController {
 			return res.status(500).json({ message: 'File can not be upload' });
 		}
 	}
+
+	async downloadFile(req: Request, res: Response) {
+		try {
+			const file = await File.findOne({
+				_id: req.query.id,
+				userId: req.user.id,
+			});
+
+			const path = `${process.env.FILE_PATH}\\${req.user.id}\\${file?.path}\\${file?.name}`;
+
+			if (fs.existsSync(path)) {
+				return res.download(path, file?.name as string);
+			}
+
+			return res.status(400).json({ message: 'Download error' });
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: 'File can not be download' });
+		}
+	}
 }
 
 export default new FileController();

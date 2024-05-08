@@ -1,6 +1,7 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { addFile, setFiles } from '../reducers/fileReducer';
+import { TFile } from '../libs/definitions';
 
 export const getFiles = (dirId: string) => {
 	return async (dispatch: Dispatch) => {
@@ -109,4 +110,34 @@ export const uploadFile = (file: File, dirId: string) => {
 			}
 		}
 	};
+};
+
+export const downloadFile = async (file: TFile) => {
+	try {
+		const response = await fetch(
+			`http://localhost:5000/api/files/download?id=${file._id}`,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+			}
+		);
+
+		if (response.status === 200) {
+			const blob = await response.blob();
+			const downloadUrl = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = downloadUrl;
+			link.download = file.name;
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		}
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			console.log(error.response?.data.message);
+		} else {
+			console.log('An error occurred:' + (error as Error).message);
+		}
+	}
 };
