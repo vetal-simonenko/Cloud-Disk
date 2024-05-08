@@ -47,10 +47,18 @@ class FileController {
 
 	async getFiles(req: Request, res: Response) {
 		try {
-			const files = await File.find({
+			const { sort } = req.query;
+			const commonQuery = {
 				userId: req.user.id,
 				parentId: req.query.parent,
-			});
+			};
+
+			let sortQuery = {};
+			if (sort === 'name' || sort === 'type' || sort === 'date') {
+				sortQuery = { [sort]: 1 };
+			}
+
+			const files = await File.find(commonQuery).sort(sortQuery);
 
 			return res.json(files);
 		} catch (error) {

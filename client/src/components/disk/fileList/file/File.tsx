@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteFile, downloadFile } from '../../../../actions/file';
+import { formatBytes } from '../../../../libs/utils';
+import { blue } from '@mui/material/colors';
 
 const FileLink = styled(Link)({
 	color: 'white',
@@ -48,19 +50,26 @@ const File = ({ file }: { file: TFile }) => {
 				},
 			}}
 		>
-			<Grid item xs={7}>
+			<Grid
+				item
+				xs={7}
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+				}}
+			>
 				{file.type === 'dir' ? (
 					<FileLink
 						onClick={openDirHandler}
 						to={`/${file._id}`}
 						sx={{ display: 'inline-flex', alignItems: 'center' }}
 					>
-						<FolderIcon sx={{ mr: 2 }} />
+						<FolderIcon sx={{ mr: 2, color: blue[200] }} />
 						{file.name}
 					</FileLink>
 				) : (
 					<Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-						<InsertDriveFileIcon sx={{ mr: 2 }} />
+						<InsertDriveFileIcon sx={{ mr: 2, color: blue[200] }} />
 						{file.name}
 					</Box>
 				)}
@@ -101,7 +110,7 @@ const File = ({ file }: { file: TFile }) => {
 				>
 					<DeleteIcon />
 				</Button>
-				{`${(file.size / 1000000).toFixed(3)} Mb`}
+				{formatBytes(file.size)}
 			</Grid>
 		</Grid>
 	);

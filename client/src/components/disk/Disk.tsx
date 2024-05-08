@@ -6,8 +6,12 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	FormControl,
 	Grid,
+	InputLabel,
 	LinearProgress,
+	MenuItem,
+	Select,
 	Snackbar,
 	TextField,
 	Typography,
@@ -38,13 +42,14 @@ const Disk = () => {
 	const [open, setOpen] = useState(false);
 	const textRef = useRef<HTMLInputElement | null>(null);
 	const [dragEnter, setDragEnter] = useState(false);
+	const [sort, setSort] = useState('type');
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
 
 	useEffect(() => {
-		dispatch(getFiles(currentDir));
-	}, [currentDir, dispatch]);
+		dispatch(getFiles(currentDir, sort));
+	}, [currentDir, dispatch, sort]);
 
 	const handleTogglePopup = () => {
 		setOpen((open) => !open);
@@ -199,7 +204,20 @@ const Disk = () => {
 							alignItems: 'center',
 						}}
 					>
-						Sort
+						<FormControl sx={{ width: '150px' }}>
+							<InputLabel id='select-label'>Sort</InputLabel>
+							<Select
+								labelId='select-label'
+								id='sort'
+								value={sort}
+								label='Age'
+								onChange={(e) => setSort(e.target.value)}
+							>
+								<MenuItem value='name'>By name</MenuItem>
+								<MenuItem value='type'>By type</MenuItem>
+								<MenuItem value='date'>By date</MenuItem>
+							</Select>
+						</FormControl>
 					</Grid>
 				</Grid>
 
