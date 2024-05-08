@@ -1,4 +1,4 @@
-import { Button, Grid, styled } from '@mui/material';
+import { Box, Button, Grid, styled } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
@@ -49,18 +49,21 @@ const File = ({ file }: { file: TFile }) => {
 			}}
 		>
 			<Grid item xs={7}>
-				<FileLink
-					onClick={openDirHandler}
-					to={`/${file._id}`}
-					sx={{ display: 'inline-flex', alignItems: 'center' }}
-				>
-					{file.type === 'dir' ? (
+				{file.type === 'dir' ? (
+					<FileLink
+						onClick={openDirHandler}
+						to={`/${file._id}`}
+						sx={{ display: 'inline-flex', alignItems: 'center' }}
+					>
 						<FolderIcon sx={{ mr: 2 }} />
-					) : (
+						{file.name}
+					</FileLink>
+				) : (
+					<Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
 						<InsertDriveFileIcon sx={{ mr: 2 }} />
-					)}{' '}
-					{file.name}
-				</FileLink>
+						{file.name}
+					</Box>
+				)}
 			</Grid>
 			<Grid
 				item

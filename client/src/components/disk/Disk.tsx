@@ -1,4 +1,5 @@
 import {
+	Alert,
 	Box,
 	Button,
 	Dialog,
@@ -6,16 +7,20 @@ import {
 	DialogContent,
 	DialogTitle,
 	Grid,
+	LinearProgress,
+	Snackbar,
 	TextField,
 	Typography,
 	styled,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { createDir, getFiles, uploadFile } from '../../actions/file';
 import FileList from './fileList/FileList';
 import { popFromStack } from '../../reducers/fileReducer';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React from 'react';
+import { hideUploader } from '../../reducers/uploadReducer';
 
 const VisuallyHiddenInput = styled('input')({
 	clip: 'rect(0 0 0 0)',
@@ -100,6 +105,8 @@ const Disk = () => {
 		setDragEnter(false);
 	};
 
+	const { isVisible, files } = useAppSelector((state) => state.upload);
+
 	return !dragEnter ? (
 		<>
 			<Dialog
@@ -130,7 +137,6 @@ const Disk = () => {
 					<Button type='submit'>Create</Button>
 				</DialogActions>
 			</Dialog>
-
 			<Box
 				maxWidth='md'
 				marginInline='auto'
@@ -199,6 +205,33 @@ const Disk = () => {
 
 				<FileList />
 			</Box>
+			<Snackbar
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+				open={isVisible}
+				onClose={() => dispatch(hideUploader())}
+			>
+				<Alert
+					onClose={() => dispatch(hideUploader())}
+					severity='info'
+					variant='filled'
+					sx={{ width: '350px', color: 'white' }}
+				>
+					{files.map((file) => (
+						<Fragment key={file.id}>
+							{file.name}{' '}
+							<LinearProgress
+								sx={{
+									margin: '5px 0 10px',
+									width: '240px',
+									color: 'white',
+								}}
+								variant='determinate'
+								value={file.progress}
+							/>
+						</Fragment>
+					))}
+				</Alert>
+			</Snackbar>
 		</>
 	) : (
 		<Box

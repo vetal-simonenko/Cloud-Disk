@@ -2,6 +2,11 @@ import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { addFile, deleteFileAction, setFiles } from '../reducers/fileReducer';
 import { TFile } from '../libs/definitions';
+import {
+	addUploadFile,
+	changeUploadFile,
+	showUploader,
+} from '../reducers/uploadReducer';
 
 export const getFiles = (dirId: string) => {
 	return async (dispatch: Dispatch) => {
@@ -67,8 +72,17 @@ export const uploadFile = (file: File, dirId: string) => {
 			formData.append('file', file);
 
 			if (dirId) {
-				formData.append('parentId', dirId);
+				formData.append('parent', dirId);
 			}
+
+			const uploadFile = {
+				id: `${Date.now()}`,
+				name: file.name,
+				progress: 0,
+			};
+
+			dispatch(showUploader());
+			dispatch(addUploadFile(uploadFile));
 
 			const response = await axios.post(
 				`http://localhost:5000/api/files/upload`,
@@ -91,11 +105,12 @@ export const uploadFile = (file: File, dirId: string) => {
 							  );
 						console.log('total ', totalLength);
 						if (progressEvent.event.lengthComputable) {
-							const progress = Math.round(
+							uploadFile.progress = Math.round(
 								(progressEvent.loaded * 100) /
 									progressEvent.event.total
 							);
-							console.log(`Progress: ${progress}%`);
+							console.log(`Progress: ${uploadFile.progress}%`);
+							dispatch(changeUploadFile(uploadFile));
 						}
 					},
 				}

@@ -60,8 +60,10 @@ const ResponsiveAppBar = () => {
 	// TODO: need to delete later
 	const user = useAppSelector((state) => state.user);
 	const files = useAppSelector((state) => state.files);
+	const upload = useAppSelector((state) => state.upload);
 	console.log(user);
 	console.log(files);
+	console.log(upload);
 
 	return (
 		<AppBar position='static'>
