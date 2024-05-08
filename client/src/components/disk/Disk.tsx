@@ -32,6 +32,7 @@ const VisuallyHiddenInput = styled('input')({
 const Disk = () => {
 	const [open, setOpen] = useState(false);
 	const textRef = useRef<HTMLInputElement | null>(null);
+	const [dragEnter, setDragEnter] = useState(false);
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
@@ -73,7 +74,33 @@ const Disk = () => {
 		}
 	};
 
-	return (
+	const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragEnter(true);
+	};
+
+	const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragEnter(false);
+	};
+
+	const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const files = [...e.dataTransfer.files];
+
+		if (files) {
+			[...files].forEach((file) =>
+				dispatch(uploadFile(file, currentDir))
+			);
+		}
+
+		setDragEnter(false);
+	};
+
+	return !dragEnter ? (
 		<>
 			<Dialog
 				open={open}
@@ -104,7 +131,13 @@ const Disk = () => {
 				</DialogActions>
 			</Dialog>
 
-			<Box maxWidth='md' marginInline='auto'>
+			<Box
+				maxWidth='md'
+				marginInline='auto'
+				onDragEnter={dragEnterHandler}
+				onDragLeave={dragLeaveHandler}
+				onDragOver={dragEnterHandler}
+			>
 				<Typography
 					variant='h5'
 					component='h1'
@@ -167,6 +200,41 @@ const Disk = () => {
 				<FileList />
 			</Box>
 		</>
+	) : (
+		<Box
+			onDragEnter={dragEnterHandler}
+			onDragLeave={dragLeaveHandler}
+			onDragOver={dragEnterHandler}
+			onDrop={dropHandler}
+			marginInline='auto'
+			sx={{
+				height: '70vh',
+				border: '2px dashed white',
+				borderRadius: '10px',
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}
+		>
+			<Typography
+				variant='h5'
+				component='h1'
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<CloudUploadIcon
+					sx={{
+						mr: 2,
+						width: 50,
+						height: 50,
+					}}
+				/>
+				Drag and drop the file here...
+			</Typography>
+		</Box>
 	);
 };
 
