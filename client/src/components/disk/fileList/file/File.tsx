@@ -4,7 +4,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { TFile } from '../../../../libs/definitions';
 import { useAppDispatch, useAppSelector } from '../../../../reducers/hooks';
 import { pushToStack, setCurrentDir } from '../../../../reducers/fileReducer';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteFile, downloadFile } from '../../../../actions/file';
