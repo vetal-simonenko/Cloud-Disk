@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import File from './file/File';
+import File from './file/FileListItem';
 import { useAppSelector } from '../../../reducers/hooks';
 import { TFile } from '../../../libs/definitions';
 

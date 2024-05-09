@@ -26,6 +26,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React from 'react';
 import { hideUploader } from '../../reducers/uploadReducer';
 import Loader from '../loader/Loader';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import AppsIcon from '@mui/icons-material/Apps';
+import FileTile from './fileList/FileTile';
 
 const VisuallyHiddenInput = styled('input')({
 	clip: 'rect(0 0 0 0)',
@@ -44,6 +47,7 @@ const Disk = () => {
 	const textRef = useRef<HTMLInputElement | null>(null);
 	const [dragEnter, setDragEnter] = useState(false);
 	const [sort, setSort] = useState('type');
+	const [view, setView] = useState(true);
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
@@ -52,6 +56,10 @@ const Disk = () => {
 	useEffect(() => {
 		dispatch(getFiles(currentDir, sort));
 	}, [currentDir, dispatch, sort]);
+
+	const handleView = () => {
+		setView((view) => !view);
+	};
 
 	const handleTogglePopup = () => {
 		setOpen((open) => !open);
@@ -224,10 +232,42 @@ const Disk = () => {
 								<MenuItem value='date'>By date</MenuItem>
 							</Select>
 						</FormControl>
+						<Button
+							onClick={handleView}
+							disabled={!view}
+							sx={{
+								minWidth: '0',
+								padding: '10px',
+								ml: 1,
+							}}
+						>
+							<AppsIcon
+								sx={{
+									width: '30px',
+									height: '30px',
+								}}
+							/>
+						</Button>
+						<Button
+							onClick={handleView}
+							disabled={view}
+							sx={{
+								minWidth: '0',
+								padding: '10px',
+								ml: 1,
+							}}
+						>
+							<ViewListIcon
+								sx={{
+									width: '30px',
+									height: '30px',
+								}}
+							/>
+						</Button>
 					</Grid>
 				</Grid>
 
-				<FileList />
+				{view ? <FileList /> : <FileTile />}
 			</Box>
 			<Snackbar
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
