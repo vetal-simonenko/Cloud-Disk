@@ -9,5 +9,6 @@ fileRouter.post('/upload', authMiddleware, FileController.uploadFile);
 fileRouter.get('', authMiddleware, FileController.getFiles);
 fileRouter.get('/download', authMiddleware, FileController.downloadFile);
 fileRouter.delete('/', authMiddleware, FileController.deleteFile);
+fileRouter.get('/search', authMiddleware, FileController.searchFile);
 
 export default fileRouter;

@@ -186,3 +186,28 @@ export const deleteFile = (file: TFile) => {
 		}
 	};
 };
+
+export const searchFiles = (search: string) => {
+	return async (dispatch: Dispatch) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:5000/api/files/search?search=${search.toLowerCase()}`,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							'token'
+						)}`,
+					},
+				}
+			);
+			dispatch(setFiles(response.data));
+			console.log(response.data);
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.log(error.response?.data.message);
+			} else {
+				console.log('An error occurred:' + (error as Error).message);
+			}
+		}
+	};
+};

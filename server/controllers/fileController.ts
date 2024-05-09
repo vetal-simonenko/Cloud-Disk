@@ -168,6 +168,24 @@ class FileController {
 			return res.status(400).json({ message: 'File can not be deleted' });
 		}
 	}
+
+	async searchFile(req: Request, res: Response) {
+		try {
+			const searchName = req.query.search;
+			let files = await File.find({ userId: req.user.id });
+
+			files = files.filter((file) =>
+				(file.name as string)
+					.toLowerCase()
+					.includes(searchName as string)
+			);
+
+			return res.json(files);
+		} catch (error) {
+			console.log(error);
+			return res.status(400).json({ message: 'Search error' });
+		}
+	}
 }
 
 export default new FileController();

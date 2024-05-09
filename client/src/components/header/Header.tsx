@@ -18,6 +18,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { logoutUser } from '../../reducers/userReducer';
 import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
+import SearchForm from '../searchForm/searchForm';
 
 const pages = [
 	{ label: 'Login', url: '/login' },
@@ -92,7 +93,7 @@ const ResponsiveAppBar = () => {
 					>
 						MERN CLOUD
 					</Typography>
-
+					{isAuth && <SearchForm />}
 					<Box
 						sx={{
 							flexGrow: 1,
@@ -165,7 +166,6 @@ const ResponsiveAppBar = () => {
 						MERN
 						<br /> CLOUD
 					</Typography>
-
 					{!isAuth ? (
 						<Box
 							component='nav'

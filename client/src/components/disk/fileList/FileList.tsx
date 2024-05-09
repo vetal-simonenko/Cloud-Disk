@@ -6,6 +6,10 @@ import { TFile } from '../../../libs/definitions';
 const FileList = () => {
 	const files: TFile[] = useAppSelector((state) => state.files.files);
 
+	if (files.length === 0) {
+		return <div>Files not found...</div>;
+	}
+
 	return (
 		<>
 			<Grid container sx={{ p: 2 }}>
