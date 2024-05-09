@@ -25,6 +25,7 @@ import { popFromStack } from '../../reducers/fileReducer';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React from 'react';
 import { hideUploader } from '../../reducers/uploadReducer';
+import Loader from '../loader/Loader';
 
 const VisuallyHiddenInput = styled('input')({
 	clip: 'rect(0 0 0 0)',
@@ -46,6 +47,7 @@ const Disk = () => {
 
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
+	const loader = useAppSelector((state) => state.app.loader);
 
 	useEffect(() => {
 		dispatch(getFiles(currentDir, sort));
@@ -111,6 +113,10 @@ const Disk = () => {
 	};
 
 	const { isVisible, files } = useAppSelector((state) => state.upload);
+
+	if (loader) {
+		return <Loader />;
+	}
 
 	return !dragEnter ? (
 		<>

@@ -2,8 +2,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { useState } from 'react';
-import { useAppDispatch } from '../../reducers/hooks';
-import { searchFiles } from '../../actions/file';
+import { useAppDispatch, useAppSelector } from '../../reducers/hooks';
+import { getFiles, searchFiles } from '../../actions/file';
 import debounce from 'debounce';
 
 const Search = styled('div')(({ theme }) => ({
@@ -51,6 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SearchForm = () => {
 	const [searchName, setSearchName] = useState('');
 	const dispatch = useAppDispatch();
+	const currentDir = useAppSelector((state) => state.files.currentDir);
 
 	const debouncedSearchChangeHandler = debounce((value: string) => {
 		dispatch(searchFiles(value));
@@ -65,7 +66,7 @@ const SearchForm = () => {
 		if (value !== '') {
 			debouncedSearchChangeHandler(value);
 		} else {
-			dispatch(searchFiles(value));
+			dispatch(getFiles(currentDir, null));
 		}
 	};
 

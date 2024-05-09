@@ -7,10 +7,12 @@ import {
 	changeUploadFile,
 	showUploader,
 } from '../reducers/uploadReducer';
+import { hideLoader, showLoader } from '../reducers/appReducer';
 
-export const getFiles = (dirId: string, sort: string) => {
+export const getFiles = (dirId: string, sort: string | null) => {
 	return async (dispatch: Dispatch) => {
 		try {
+			dispatch(showLoader());
 			let url = 'http://localhost:5000/api/files';
 			if (dirId || sort) {
 				url += '?';
@@ -36,6 +38,8 @@ export const getFiles = (dirId: string, sort: string) => {
 			} else {
 				console.log('An error occurred:' + (error as Error).message);
 			}
+		} finally {
+			dispatch(hideLoader());
 		}
 	};
 };
@@ -190,6 +194,7 @@ export const deleteFile = (file: TFile) => {
 export const searchFiles = (search: string) => {
 	return async (dispatch: Dispatch) => {
 		try {
+			dispatch(showLoader());
 			const response = await axios.get(
 				`http://localhost:5000/api/files/search?search=${search.toLowerCase()}`,
 				{
@@ -208,6 +213,8 @@ export const searchFiles = (search: string) => {
 			} else {
 				console.log('An error occurred:' + (error as Error).message);
 			}
+		} finally {
+			dispatch(hideLoader());
 		}
 	};
 };

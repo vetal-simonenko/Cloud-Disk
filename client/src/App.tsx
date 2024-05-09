@@ -1,4 +1,4 @@
-import { Box, Container, CircularProgress } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import ResponsiveAppBar from './components/header/Header';
 import Footer from './components/footer/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -21,18 +21,7 @@ const App = () => {
 	}, [dispatch]);
 
 	if (loader) {
-		return (
-			<Box
-				sx={{
-					minHeight: '100vh',
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<CircularProgress />
-			</Box>
-		);
+		return;
 	}
 
 	return (
