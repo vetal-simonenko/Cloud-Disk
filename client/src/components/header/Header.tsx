@@ -55,8 +55,14 @@ const ResponsiveAppBar = () => {
 	};
 
 	const isAuth = useAppSelector((state) => state.user.isAuth);
+	const currentUser = useAppSelector(
+		(state) => state.user.currentUser as { avatar: string }
+	);
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
+	const avatar = currentUser.avatar
+		? `http://localhost:5000/${currentUser.avatar}`
+		: '';
 
 	// TODO: need to delete later
 	const user = useAppSelector((state) => state.user);
@@ -199,10 +205,7 @@ const ResponsiveAppBar = () => {
 									onClick={handleOpenUserMenu}
 									sx={{ p: 0 }}
 								>
-									<Avatar
-										alt='Remy Sharp'
-										src='/static/images/avatar/2.jpg'
-									/>
+									<Avatar alt='User' src={avatar} />
 								</IconButton>
 							</Tooltip>
 							<Menu
@@ -221,6 +224,15 @@ const ResponsiveAppBar = () => {
 								open={Boolean(anchorElUser)}
 								onClose={handleCloseUserMenu}
 							>
+								<MenuItem
+									onClick={() => {
+										navigate('/profile');
+									}}
+								>
+									<Typography textAlign='center'>
+										Profile
+									</Typography>
+								</MenuItem>
 								<MenuItem
 									onClick={() => {
 										dispatch(logoutUser());

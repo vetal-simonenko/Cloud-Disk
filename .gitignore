@@ -18,6 +18,7 @@ config.env
 
 # Editor directories and files
 files/
+static/
 .vscode/*
 !.vscode/extensions.json
 .idea

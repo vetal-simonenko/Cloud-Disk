@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { auth } from './actions/user';
 import { useAppDispatch, useAppSelector } from './reducers/hooks';
 import Disk from './components/disk/Disk';
+import Profile from './components/profile/Profile';
 
 const App = () => {
 	const [loader, setLoader] = useState(true);
@@ -51,6 +52,10 @@ const App = () => {
 							) : (
 								<>
 									<Route index path='/' element={<Disk />} />
+									<Route
+										path='/profile'
+										element={<Profile />}
+									/>
 									<Route path='*' element={<Disk />} />
 								</>
 							)}

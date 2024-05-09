@@ -3,6 +3,7 @@ import File from '../models/File';
 import { Request, Response } from 'express';
 import User from '../models/User';
 import fs from 'fs';
+import { v4 as uuidv4, v4 } from 'uuid';
 
 // Extend express Request interface to include user property
 declare global {
@@ -184,6 +185,45 @@ class FileController {
 		} catch (error) {
 			console.log(error);
 			return res.status(400).json({ message: 'Search error' });
+		}
+	}
+
+	async uploadAvatar(req: Request, res: Response) {
+		try {
+			const file = req.files.file;
+			const user = await User.findById(req.user.id);
+			const avatarName = v4() + '.jpg';
+			file.mv(`${process.env.STATIC_PATH}\\${avatarName}`);
+
+			if (user) {
+				user.avatar = avatarName;
+				await user.save();
+			}
+
+			return res.json(user);
+		} catch (error) {
+			console.log(error);
+			return res.status(400).json({ message: 'Upload avatar error' });
+		}
+	}
+
+	async deleteAvatar(req: Request, res: Response) {
+		try {
+			const user = await User.findById(req.user.id);
+			fs.unlinkSync(`${process.env.STATIC_PATH}\\${user?.avatar}`);
+
+			if (user) {
+				user.avatar = null;
+			}
+
+			await user?.save();
+
+			return res.json(user);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(400)
+				.json({ message: 'Avatar can not be deleted' });
 		}
 	}
 }
