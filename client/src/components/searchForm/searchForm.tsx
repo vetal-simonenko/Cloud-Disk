@@ -48,14 +48,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	},
 }));
 
+const debouncedSearchChangeHandler = debounce(
+	(value: string, dispatch, currentDir) => {
+		if (value !== '') {
+			dispatch(searchFiles(value));
+		} else {
+			dispatch(getFiles(currentDir, null));
+		}
+	},
+	500
+);
+
 const SearchForm = () => {
 	const [searchName, setSearchName] = useState('');
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
-
-	const debouncedSearchChangeHandler = debounce((value: string) => {
-		dispatch(searchFiles(value));
-	}, 500);
 
 	const searchChangeHandler = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -63,15 +70,11 @@ const SearchForm = () => {
 		const { value } = e.target;
 		setSearchName(value);
 
-		if (value !== '') {
-			debouncedSearchChangeHandler(value);
-		} else {
-			dispatch(getFiles(currentDir, null));
-		}
+		debouncedSearchChangeHandler(value, dispatch, currentDir);
 	};
 
 	return (
-		<Search sx={{ margin: '0 0 0 auto' }}>
+		<Search>
 			<SearchIconWrapper>
 				<SearchIcon />
 			</SearchIconWrapper>
