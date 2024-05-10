@@ -5,16 +5,7 @@ import User from '../models/User';
 import fs from 'fs';
 import { v4 } from 'uuid';
 import path from 'path';
-
-// Extend express Request interface to include user property
-declare global {
-	namespace Express {
-		interface Request {
-			user?: any;
-			files?: any;
-		}
-	}
-}
+import { UploadedFile } from 'express-fileupload';
 
 class FileController {
 	async createDir(req: Request, res: Response) {
@@ -71,7 +62,7 @@ class FileController {
 
 	async uploadFile(req: Request, res: Response) {
 		try {
-			const file = req.files.file;
+			const file: UploadedFile = req.files!.file as UploadedFile;
 
 			const parent = await File.findOne({
 				userId: req.user.id,
@@ -80,13 +71,16 @@ class FileController {
 
 			const user = await User.findOne({ _id: req.user.id });
 
-			if (user?.usedSpace + file.size > (user?.diskSpace as number)) {
+			if (
+				(user?.usedSpace as number) + file.size >
+				(user?.diskSpace as number)
+			) {
 				return res
 					.status(400)
 					.json({ message: 'There is no space on disk' });
 			}
 
-			user!.usedSpace = user?.usedSpace + file.size;
+			user!.usedSpace = (user?.usedSpace as number) + file.size;
 
 			let aPath: string;
 			if (parent) {
@@ -198,7 +192,7 @@ class FileController {
 
 	async uploadAvatar(req: Request, res: Response) {
 		try {
-			const file = req.files.file;
+			const file: UploadedFile = req.files!.file as UploadedFile;
 			const user = await User.findById(req.user.id);
 			const avatarName = v4() + '.jpg';
 			file.mv(path.join(`${process.env.STATIC_PATH}`, `${avatarName}`));
