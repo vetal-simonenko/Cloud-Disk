@@ -7,6 +7,15 @@ import { v4 } from 'uuid';
 import path from 'path';
 import { UploadedFile } from 'express-fileupload';
 
+// Extend express Request interface to include user property
+declare global {
+	namespace Express {
+		interface Request {
+			user?: any;
+		}
+	}
+}
+
 class FileController {
 	async createDir(req: Request, res: Response) {
 		try {
