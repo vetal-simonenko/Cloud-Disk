@@ -3,7 +3,7 @@ import File from '../models/File';
 import { Request, Response } from 'express';
 import User from '../models/User';
 import fs from 'fs';
-import { v4 as uuidv4, v4 } from 'uuid';
+import { v4 } from 'uuid';
 import path from 'path';
 
 // Extend express Request interface to include user property
