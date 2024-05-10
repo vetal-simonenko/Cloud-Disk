@@ -1,8 +1,9 @@
 import fs from 'fs';
+import path from 'path';
 
 class FileService {
 	createDir(file: any) {
-		const filePath = `${process.env.FILE_PATH}\\${file.userId}\\${file.path}`;
+		const filePath = this.getPath(file);
 
 		return new Promise((resolve, reject) => {
 			try {
@@ -30,7 +31,11 @@ class FileService {
 	}
 
 	getPath(file: any) {
-		return `${process.env.FILE_PATH}\\${file.userId}\\${file.path}`;
+		return path.join(
+			`${process.env.FILE_PATH}`,
+			`${file.userId}`,
+			`${file.path}`
+		);
 	}
 }
 

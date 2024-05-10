@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import User from '../models/User';
 import fs from 'fs';
 import { v4 as uuidv4, v4 } from 'uuid';
+import path from 'path';
 
 // Extend express Request interface to include user property
 declare global {
@@ -31,7 +32,7 @@ class FileController {
 				file.path = name;
 				await fileService.createDir(file);
 			} else {
-				file.path = `${parentFile.path}\\${file.name}`;
+				file.path = path.join(`${parentFile.path}`, `${file.name}`);
 				await fileService.createDir(file);
 
 				parentFile.childIds.push(file._id);
@@ -87,25 +88,32 @@ class FileController {
 
 			user!.usedSpace = user?.usedSpace + file.size;
 
-			let path: string;
+			let aPath: string;
 			if (parent) {
-				path = `${process.env.FILE_PATH}\\${user!._id}\\${
-					parent.path
-				}\\${file.name}`;
+				aPath = path.join(
+					`${process.env.FILE_PATH}`,
+					`${user!._id}`,
+					`${parent.path}`,
+					`${file.name}`
+				);
 			} else {
-				path = `${process.env.FILE_PATH}\\${user!._id}\\${file.name}`;
+				aPath = path.join(
+					`${process.env.FILE_PATH}`,
+					`${user!._id}`,
+					`${file.name}`
+				);
 			}
 
-			if (fs.existsSync(path)) {
+			if (fs.existsSync(aPath)) {
 				return res.status(400).json({ message: 'File already exist' });
 			}
-			file.mv(path);
+			file.mv(aPath);
 
 			const type = file.name.split('.').pop();
 			let filePath = file.name;
 
 			if (parent) {
-				filePath = `${parent.path}\\ ${file.name}`;
+				filePath = path.join(`${parent.path}`, `${file.name}`);
 			}
 
 			const dbFile = new File({
@@ -193,7 +201,7 @@ class FileController {
 			const file = req.files.file;
 			const user = await User.findById(req.user.id);
 			const avatarName = v4() + '.jpg';
-			file.mv(`${process.env.STATIC_PATH}\\${avatarName}`);
+			file.mv(path.join(`${process.env.STATIC_PATH}`, `${avatarName}`));
 
 			if (user) {
 				user.avatar = avatarName;
@@ -210,7 +218,10 @@ class FileController {
 	async deleteAvatar(req: Request, res: Response) {
 		try {
 			const user = await User.findById(req.user.id);
-			fs.unlinkSync(`${process.env.STATIC_PATH}\\${user?.avatar}`);
+
+			fs.unlinkSync(
+				path.join(`${process.env.STATIC_PATH}`, `${user?.avatar}`)
+			);
 
 			if (user) {
 				user.avatar = null;
