@@ -14,7 +14,7 @@ dist-ssr
 
 node_modules/
 config.env
-.env
+.env*
 
 # Editor directories and files
 files/

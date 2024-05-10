@@ -15,6 +15,8 @@ const VisuallyHiddenInput = styled('input')({
 	width: 1,
 });
 
+console.log(import.meta.env.VITE_API_URL); // Replace with your actual usage
+
 const Profile = () => {
 	const dispatch = useAppDispatch();
 	const { avatar } = useAppSelector(

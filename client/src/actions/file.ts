@@ -13,7 +13,7 @@ export const getFiles = (dirId: string, sort: string | null) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			dispatch(showLoader());
-			let url = 'http://localhost:5000/api/files';
+			let url = `${import.meta.env.VITE_API_URL}/api/files`;
 			if (dirId || sort) {
 				url += '?';
 				if (dirId) {
@@ -48,7 +48,7 @@ export const createDir = (dirId: string, name: string) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			const response = await axios.post(
-				`http://localhost:5000/api/files`,
+				`${import.meta.env.VITE_API_URL}/api/files`,
 				{
 					name,
 					parentId: dirId ? dirId : null,
@@ -94,7 +94,7 @@ export const uploadFile = (file: File, dirId: string) => {
 			dispatch(addUploadFile(uploadFile));
 
 			const response = await axios.post(
-				`http://localhost:5000/api/files/upload`,
+				`${import.meta.env.VITE_API_URL}/api/files/upload`,
 				formData,
 				{
 					headers: {
@@ -139,7 +139,7 @@ export const uploadFile = (file: File, dirId: string) => {
 export const downloadFile = async (file: TFile) => {
 	try {
 		const response = await fetch(
-			`http://localhost:5000/api/files/download?id=${file._id}`,
+			`${import.meta.env.VITE_API_URL}/api/files/download?id=${file._id}`,
 			{
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -170,7 +170,7 @@ export const deleteFile = (file: TFile) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			const response = await axios.delete(
-				`http://localhost:5000/api/files?id=${file._id}`,
+				`${import.meta.env.VITE_API_URL}/api/files?id=${file._id}`,
 				{
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem(
@@ -196,7 +196,9 @@ export const searchFiles = (search: string) => {
 		try {
 			dispatch(showLoader());
 			const response = await axios.get(
-				`http://localhost:5000/api/files/search?search=${search.toLowerCase()}`,
+				`${
+					import.meta.env.VITE_API_URL
+				}/api/files/search?search=${search.toLowerCase()}`,
 				{
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem(

@@ -14,7 +14,7 @@ export const useRegister = () => {
 		setLoader(true);
 		try {
 			const response = await axios.post(
-				'http://localhost:5000/api/auth/registration',
+				`${import.meta.env.VITE_API_URL}/api/auth/registration`,
 				{
 					email,
 					password,

@@ -11,7 +11,7 @@ export const auth = () => {
 			}
 
 			const response = await axios.get(
-				'http://localhost:5000/api/auth/auth',
+				`${import.meta.env.VITE_API_URL}/api/auth/auth`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ export const uploadAvatar = (file: File) => {
 			}
 
 			const response = await axios.post(
-				'http://localhost:5000/api/files/avatar',
+				`${import.meta.env.VITE_API_URL}/api/files/avatar`,
 				formData,
 				{
 					headers: {
@@ -62,7 +62,7 @@ export const deleteAvatar = () => {
 			}
 
 			const response = await axios.delete(
-				'http://localhost:5000/api/files/avatar',
+				`${import.meta.env.VITE_API_URL}/api/files/avatar`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,

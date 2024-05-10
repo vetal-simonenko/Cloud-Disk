@@ -61,7 +61,7 @@ const ResponsiveAppBar = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const avatar = currentUser.avatar
-		? `http://localhost:5000/${currentUser.avatar}`
+		? `${import.meta.env.VITE_API_URL}/${currentUser.avatar}`
 		: '';
 
 	// TODO: need to delete later
